@@ -11,21 +11,66 @@ const circleRadius = 8;
 
 // define what happens when mouse is pressed down
 canvas.addEventListener("mousedown", function (e) {
-    // checks current mouse positions
-    let currX = e.clientX - canvas.offsetLeft; 
-    let currY = e.clientY - canvas.offsetTop;  
 
-    // calculate distance from mouse position to circle center
+    // get current mouse position
+    let currX = e.clientX - canvas.offsetLeft;
+    let currY = e.clientY - canvas.offsetTop;
+
+    // calculate distance from mouse to circle
     const dx = currX - circleX;
     const dy = currY - circleY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // check if mouse is within the circle radius
     if (distance <= circleRadius) {
+        // start dragging if mouse is pressed down on the circle
         isDragging = true;
-        console.log("Circle clicked!"); // for debugging
-    } 
-}, false);
+    }
+});
+
+// define what happens when mouse is moved and isDragging is true
+canvas.addEventListener("mousemove", function (e) {
+
+    // get current mouse position
+    let currX = e.clientX - canvas.offsetLeft;
+    let currY = e.clientY - canvas.offsetTop;
+
+    // calculate distance from mouse to circle
+    const dx = currX - circleX;
+    const dy = currY - circleY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // change cursor style based on whether the mouse is over the circle or dragging it
+    if (isDragging) {
+
+        circleX = currX;
+        circleY = currY;
+
+        canvas.style.cursor = "grabbing";
+
+        draw();
+
+    } else if (distance <= circleRadius) {
+
+        canvas.style.cursor = "pointer";
+
+    } else {
+
+        canvas.style.cursor = "default";
+    }
+});
+
+// define what happens when mouse is released
+canvas.addEventListener("mouseup", function (e) {
+    // returns circle to its original position when released
+    circleX = canvas.width / 2;
+    circleY = canvas.height / 2;
+
+    // update state
+    isDragging = false;
+
+    // draws the circle in its original position
+    draw();
+});
 
 // function to draw the canvas elements on each frame
 function draw() {
@@ -51,50 +96,5 @@ function draw() {
     ctx.stroke();
 };
 
-
-// define what happens when mouse is moved and isDragging is true
-canvas.addEventListener("mousemove", function (e) {
-    if (isDragging) {
-
-        // checks current mouse position
-        let currX = e.clientX - canvas.offsetLeft;
-        let currY = e.clientY - canvas.offsetTop;
-
-        // update circle position to current mouse position
-        circleX = currX;
-        circleY = currY;
-
-        // redraw the canvas with updated circle position
-        draw();
-    }
-});
-
-// define what happens when mouse is released
-canvas.addEventListener("mouseup", function (e) {
-
-    // stop dragging, which essentially means the circle will stay in its new position
-    isDragging = false;
-});
-
-// ============== initial draw  ============== //
-
-// background
-ctx.fillStyle = "yellow";  
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-// foreground
-ctx.fillStyle = "red";
-ctx.fillRect(canvas.width/4, canvas.height/4, canvas.width/2, canvas.height/2);
-
-// ropes
-ctx.beginPath();
-ctx.moveTo(canvas.width/4, canvas.height/2);
-ctx.lineTo(canvas.width/4 + 93, canvas.height/2);
-ctx.moveTo(canvas.width/4 + 107, canvas.height/2);
-ctx.lineTo(canvas.width/4 + 200, canvas.height/2);
-ctx.stroke();
-
-// center-circle
-ctx.beginPath();
-ctx.arc(canvas.width/2, canvas.height/2, 8, 0, Math.PI * 2);
-ctx.stroke();
+// initialize the canvas by drawing the initial state
+draw();
