@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 8</title>
+    <style>
+        body { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+        .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
+        canvas { display: block; box-sizing: border-box; width: 100%; height: auto; border: 1px solid #999; touch-action: none; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label><input id="showPolygon" type="checkbox" checked> Show control polygon</label>
+        <button id="undo" type="button">Remove last point</button>
+        <button id="clear" type="button">Clear</button>
+    </div>
+    <canvas id="myCanvas" width="1000" height="600" aria-label="Drawing area for control points and B-spline"></canvas>
+    <script src="script.js"></script>
+</body>
+</html>
